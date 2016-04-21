@@ -46,7 +46,7 @@ void lcd_init(){
 
     lcd_id = lcd_reg_read(0x0000);  //获取LCD的ID号，来做相应的初始化
 	
-	if(lcd_id==0X9300){//因为9341在未被复位的情况下会被读成9300	
+	if(lcd_id==0X9300 || lcd_id == 0x0){//因为9341在未被复位的情况下会被读成9300	
  		//尝试9341 ID的读取		
 		lcd_wr_reg(0XD3);				   
 		lcd_id=lcd_rd_data();	//dummy read 	
@@ -424,7 +424,11 @@ void lcd_ram_write_prepare(){
 //画点
 void lcd_draw_point(u16 x,u16 y,u16 color){
 
+	if(lcd_id == 0x9341){
+		lcd_set_cursor(x,240 - y);
+	}else{
 		lcd_set_cursor(x,y);
+	}
 		lcd_ram_write_prepare();
 		lcd_ram_write(color);
 }
