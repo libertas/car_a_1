@@ -162,13 +162,13 @@ int main(){
         USART_SendData(SENMSG_USARTx,0x80);
         for(i = 0;i < 4;i++){
             while (USART_GetFlagStatus(CMD_USARTx, USART_FLAG_TXE) == RESET); 
-            USART_SendData(SENMSG_USARTx,(u8)(((u32)(centroid_x) >> i*8) & 0x000000ff));
-            check_byte += (u8)(((u32)(centroid_y) >> i*8) & 0x000000ff);
+            USART_SendData(SENMSG_USARTx,(u8)((*(u32*)(&centroid_x) >> i*8) & 0x000000ff));
+            check_byte += (u8)((*(u32*)(&centroid_y) >> i*8) & 0x000000ff);
         }
         for(i = 0;i < 4;i++){
             while (USART_GetFlagStatus(CMD_USARTx, USART_FLAG_TXE) == RESET); 
-            USART_SendData(SENMSG_USARTx,(u8)(((u32)centroid_y >> i*8) & 0x000000ff));
-            check_byte += (u8)(((u32)(centroid_y) >> i*8) & 0x000000ff);
+            USART_SendData(SENMSG_USARTx,(u8)((*(u32*)(&centroid_y) >> i*8) & 0x000000ff));
+            check_byte += (u8)((*(u32*)(&centroid_y) >> i*8) & 0x000000ff);
         }
         while (USART_GetFlagStatus(CMD_USARTx, USART_FLAG_TXE) == RESET); 
         USART_SendData(SENMSG_USARTx,(u8)(check_byte));
