@@ -1,3 +1,5 @@
+#include <string.h>
+
 #include "stm32f4xx_it.h"
 #include "main.h"
 #include "configuration.h"
@@ -35,7 +37,6 @@ int main(){
     param_struct *param;
     GPIO_TypeDef *gpio_g;
     u32 *gpiog_idr;
-    u8 check_byte;
 /*********这是数据定义区的分割线**********************/	
 
 /*************以下是各种初始化********************/
@@ -157,21 +158,33 @@ int main(){
         }
 
         /**********************下面给大车发送白线的质心****************/
-        check_byte = 0x80;
+        uint8_t check_byte = 0x00;
         while (USART_GetFlagStatus(CMD_USARTx, USART_FLAG_TXE) == RESET); 
-        USART_SendData(SENMSG_USARTx,0x80);
+        USART_SendData(SENMSG_USARTx, 0x80);
+		check_byte += 0x80;
+		
+		uint32_t qbuf;
+		uint8_t bbuf;
+		
+		memcpy(&qbuf, &centroid_x, 4);
         for(i = 0;i < 4;i++){
-            while (USART_GetFlagStatus(CMD_USARTx, USART_FLAG_TXE) == RESET); 
-            USART_SendData(SENMSG_USARTx,(u8)((*(u32*)(&centroid_x) >> i*8) & 0x000000ff));
-            check_byte += (u8)((*(u32*)(&centroid_y) >> i*8) & 0x000000ff);
+			bbuf = (uint8_t)(0xff & (qbuf >> i * 8));
+			check_byte += bbuf;
+            while (USART_GetFlagStatus(CMD_USARTx, USART_FLAG_TXE) == RESET);
+            USART_SendData(SENMSG_USARTx, bbuf);
         }
+		
+		memcpy(&qbuf, &centroid_y, 4);
         for(i = 0;i < 4;i++){
-            while (USART_GetFlagStatus(CMD_USARTx, USART_FLAG_TXE) == RESET); 
-            USART_SendData(SENMSG_USARTx,(u8)((*(u32*)(&centroid_y) >> i*8) & 0x000000ff));
-            check_byte += (u8)((*(u32*)(&centroid_y) >> i*8) & 0x000000ff);
+			bbuf = (uint8_t)(0xff & (qbuf >> i * 8));
+			check_byte += bbuf;
+            while (USART_GetFlagStatus(CMD_USARTx, USART_FLAG_TXE) == RESET);
+            USART_SendData(SENMSG_USARTx, bbuf);
         }
+		
         while (USART_GetFlagStatus(CMD_USARTx, USART_FLAG_TXE) == RESET); 
         USART_SendData(SENMSG_USARTx,(u8)(check_byte));
+		delay_ms(100);
         /**********************上面给大车发送白线的质心****************/
 
 
