@@ -2,5 +2,6 @@
 .ycm_extra_conf.pyc
 tags
 *.[oa]
-keil/obj
+keil/obj/*
+keil/lst/*
 tmp

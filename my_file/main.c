@@ -184,7 +184,7 @@ int main(){
 		
         while (USART_GetFlagStatus(CMD_USARTx, USART_FLAG_TXE) == RESET); 
         USART_SendData(SENMSG_USARTx,(u8)(check_byte));
-		delay_ms(100);
+		delay_ms(800);
         /**********************上面给大车发送白线的质心****************/
 
 
