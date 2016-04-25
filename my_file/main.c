@@ -64,7 +64,8 @@ int main(){
     TIM2_Configuration();   //TIM2为计算程序执行周期
     tim4_config();   //正交编码器所用
     param_init(&param);   //初始化参数组，而且从FLSH上读取保存的参数到内存
-    //param_switch(0);   //小车刚开始的参数组是0
+   // param_switch(0);   //小车刚开始的参数组是0
+	
 
     //配置摄像头
     erro_n = camera_init(&ov2640_image);   //初始化摄像头
@@ -74,6 +75,7 @@ int main(){
         uprintf(DEBUG_USARTx,str_temp);
         while(1);
     }
+	camera_reg_write(0x9C,param->threshold);
     camera_start();   //摄像头开始采集数据
     //配置MPU6050
 //    erro_n = mpu6050_fast_init(gyro);
@@ -184,7 +186,6 @@ int main(){
 		
         while (USART_GetFlagStatus(CMD_USARTx, USART_FLAG_TXE) == RESET); 
         USART_SendData(SENMSG_USARTx,(u8)(check_byte));
-		delay_ms(800);
         /**********************上面给大车发送白线的质心****************/
 
 
