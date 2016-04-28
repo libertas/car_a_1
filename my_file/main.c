@@ -4,6 +4,7 @@
 #include "main.h"
 #include "configuration.h"
 #include "camera.h"
+#include "image.h"
 #include "global.h"
 #include "tftlcd.h"
 #include "tracking.h"
@@ -34,7 +35,7 @@ int main(){
     u16 lcd_id;
     char str_temp[100];
     image *ov2640_image;
-	u8 **imgd = (u8**)ov2640_image->array;
+	u8 **imgd;
     param_struct *param;
     GPIO_TypeDef *gpio_g;
     u32 *gpiog_idr;
@@ -130,7 +131,7 @@ int main(){
 /***********************以上是数山岗的部分代码************************/	
 		
 /**********************下面对二值图进行渲染，而且算白线的质心******************/
-		
+		imgd = (u8**)ov2640_image->array;
 		image_filter(imgd, IMAGE_DEFAULT_HEIGHT, IMAGE_DEFAULT_WIDTH);
 		
         sum_x = 0;
@@ -141,7 +142,7 @@ int main(){
         lcd_set_cursor(0,320 - i);
         lcd_ram_write_prepare();
             for(j = 0;j < ov2640_image->width;j++){
-                if((((ov2640_image->array)[(scanline + j)/8] << ((scanline + j)%8)) & 0x80) == 0x80){
+                if(((((u8*)imgd)[(scanline + j)/8] << ((scanline + j)%8)) & 0x80) == 0x80){
                     lcd_ram_write(0x0);  //渲染二值化图像
                 }else{ 
                     lcd_ram_write(0xffff);   //渲染二值化图像
