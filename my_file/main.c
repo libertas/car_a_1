@@ -34,6 +34,7 @@ int main(){
     u16 lcd_id;
     char str_temp[100];
     image *ov2640_image;
+	u8 **imgd = (u8**)ov2640_image->array;
     param_struct *param;
     GPIO_TypeDef *gpio_g;
     u32 *gpiog_idr;
@@ -129,6 +130,9 @@ int main(){
 /***********************以上是数山岗的部分代码************************/	
 		
 /**********************下面对二值图进行渲染，而且算白线的质心******************/
+		
+		image_filter(imgd, IMAGE_DEFAULT_HEIGHT, IMAGE_DEFAULT_WIDTH);
+		
         sum_x = 0;
         sum_y = 0;
         sum_area = 0;
