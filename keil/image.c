@@ -22,6 +22,11 @@ int image_bfs_step(uint16_t u, uint16_t v, bfs_t **b)
 	return 0;
 }
 
+int image_bfs_post(bfs_t **b)
+{
+	return 0;
+}
+
 int image_bfs(uint8_t **img, uint16_t height, uint16_t width)
 {
 	uint16_t i, j;
@@ -67,6 +72,8 @@ int image_bfs(uint8_t **img, uint16_t height, uint16_t width)
 				
 				b[u >> 8][u & 0xff].color = IMAGE_BLACK;
 			}
+			
+			image_bfs_post(b);
 		}
 	}
 	
