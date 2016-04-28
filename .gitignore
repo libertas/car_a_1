@@ -4,4 +4,5 @@ tags
 *.[oa]
 keil/obj/*
 keil/lst/*
+keil/JLinkLog.txt
 tmp
