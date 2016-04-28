@@ -1,8 +1,6 @@
 #include <stdint.h>
 
 struct bfs_struct {
-	uint8_t **img;
-	
 	/*
 		0 for white
 		1 for gray
@@ -20,5 +18,5 @@ struct bfs_struct {
 
 typedef struct bfs_struct bfs_t;
 
-int image_bfs(bfs_t b, uint16_t height, uint16_t width);
+int image_bfs(bfs_t **b, uint8_t **img, uint16_t height, uint16_t width);
 int image_filter(uint8_t **img, uint16_t height, uint16_t width);
