@@ -4,6 +4,7 @@
 
 uint16_t bfs_queue_buf[IMAGE_DEFAULT_HEIGHT * IMAGE_DEFAULT_WIDTH];
 bfs_t bfs_buf[IMAGE_DEFAULT_HEIGHT * IMAGE_DEFAULT_WIDTH];
+queue q;
 
 int image_bfs_step(uint16_t u, uint16_t v, bfs_t **b)
 {
@@ -14,6 +15,8 @@ int image_bfs_step(uint16_t u, uint16_t v, bfs_t **b)
 		b[i][j].color = IMAGE_GRAY;
 		b[i][j].d = b[u >> 8][u & 0xff].d + 1;
 		b[i][j].pi = u;
+		
+		in_queue(&q, v);
 	}
 	
 	return 0;
@@ -21,7 +24,6 @@ int image_bfs_step(uint16_t u, uint16_t v, bfs_t **b)
 
 int image_bfs(uint8_t **img, uint16_t height, uint16_t width)
 {
-	queue q;
 	uint16_t i, j;
 	uint16_t s, u;
 	
@@ -49,6 +51,7 @@ int image_bfs(uint8_t **img, uint16_t height, uint16_t width)
 			
 			while(0 != q.count) {
 				out_queue(&q, &u);
+				
 				if((u >> 8) + 1 < IMAGE_DEFAULT_HEIGHT - 1) {
 					image_bfs_step(u, u + 0x0100, b);
 				}
@@ -61,6 +64,8 @@ int image_bfs(uint8_t **img, uint16_t height, uint16_t width)
 				if((u & 0xff + 1) > 0) {
 					image_bfs_step(u, u - 0x0001, b);
 				}
+				
+				b[u >> 8][u & 0xff].color = IMAGE_BLACK;
 			}
 		}
 	}
