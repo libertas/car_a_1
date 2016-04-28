@@ -468,6 +468,16 @@
               <FileType>1</FileType>
               <FilePath>..\my_file\mpu6050.c</FilePath>
             </File>
+            <File>
+              <FileName>image.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\image.c</FilePath>
+            </File>
+            <File>
+              <FileName>utils.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\utils.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -493,6 +503,16 @@
         <Group>
           <GroupName>head</GroupName>
           <Files>
+            <File>
+              <FileName>utils.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\utils.h</FilePath>
+            </File>
+            <File>
+              <FileName>image.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\image.h</FilePath>
+            </File>
             <File>
               <FileName>stm32f4xx_it.h</FileName>
               <FileType>5</FileType>
