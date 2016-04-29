@@ -132,7 +132,7 @@ int main(){
 		
 /**********************下面对二值图进行渲染，而且算白线的质心******************/
 		imgd = (u8**)ov2640_image->array;
-		image_filter(imgd, IMAGE_DEFAULT_HEIGHT, IMAGE_DEFAULT_WIDTH);
+		// image_filter(imgd, IMAGE_DEFAULT_HEIGHT, IMAGE_DEFAULT_WIDTH);
 		
         sum_x = 0;
         sum_y = 0;

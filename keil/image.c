@@ -1,7 +1,7 @@
 #include "camera.h"
 #include "image.h"
 #include "utils.h"
-
+/*
 uint16_t bfs_queue_buf[IMAGE_DEFAULT_HEIGHT * IMAGE_DEFAULT_WIDTH];
 bfs_t bfs_buf[IMAGE_DEFAULT_HEIGHT * IMAGE_DEFAULT_WIDTH];
 queue q;
@@ -88,3 +88,4 @@ int image_filter(uint8_t **img, uint16_t height, uint16_t width)
 
 	return 0;
 }
+*/
