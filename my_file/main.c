@@ -11,6 +11,7 @@
 #include "parameter.h"
 #include "cmd.h"
 #include "mpu6050.h"
+#include "interpreter.h"
 
 u8 g_exp_lock = 0;     //曝光度锁定
 float g_pre_centroid_x[10] = {0};  //保存十个周期的质心
@@ -47,6 +48,7 @@ int main(){
     rcc_configuration();
     gpio_config();
     USART_Configuration();
+	interpreter_config();
 /**********************下面打印开机欢迎信息********************/
     uprintf(DEBUG_USARTx,"\n\n\n********************************************************\n");
     uprintf(DEBUG_USARTx,"               Welcome to BUPT ROBOCON!\n");

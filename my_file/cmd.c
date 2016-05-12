@@ -171,7 +171,7 @@ int cmd_exec(int argc,char *argv[]){
     return -2;
 }
 
-
+/*
 #if CMD_USARTn == 1
 void USART1_IRQHandler(void){
 #elif CMD_USARTn == 2
@@ -348,6 +348,7 @@ void UART5_IRQHandler(void){
         }			
     }
 }
+*/
 
 void cmd_help_func(int argc,char *argv[]){
     int i;

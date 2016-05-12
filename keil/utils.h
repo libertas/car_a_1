@@ -4,16 +4,20 @@
 #ifndef UTILS_H
 #define UTILS_H
 
+/*
+	To avoid the bug of the compilers
+*/
+double int2double(signed int i);
 
 typedef struct
 {
-	uint16_t *data;
+	char *data;
 	uint32_t front, rear;
 	uint16_t count, max_size;
-}	queue;
+}	char_queue;
 
-int init_queue(queue *p, uint16_t buf[], uint16_t max_size);
-int in_queue(queue *p, uint16_t c);
-int out_queue(queue *p, uint16_t *c);
+int init_char_queue(char_queue *p, char buf[], uint16_t max_size);
+int in_char_queue(char_queue *p, char c);
+int out_char_queue(char_queue *p, char *c);
 
 #endif

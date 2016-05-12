@@ -145,6 +145,19 @@ void PendSV_Handler(void)
 {
 }
 
+#include "interpreter.h"
+void UART5_IRQHandler(void)
+{
+	char data;
+
+	if(USART_GetITStatus(UART5, USART_IT_RXNE) != RESET)
+	{
+		data = USART_ReceiveData(UART5);
+		
+		in_char_queue(&wl_queue, data);
+	}
+}
+
 
 /* void EXTI3_IRQHandler(void){ */
 		/* if(EXTI_GetITStatus(EXTI_Line3) != RESET){ */

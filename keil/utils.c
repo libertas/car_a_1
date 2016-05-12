@@ -1,7 +1,18 @@
 #include "utils.h"
 
+double int2double(signed int i)
+{
+	double result;
+	if(i > 32767) {
+		result =  (double)((unsigned int) i) - 65536.0;
+	} else {
+		result = (double) i;
+	}
+	return result;
+}
 
-int init_queue(queue *p, uint16_t buf[], uint16_t max_size)
+
+int init_char_queue(char_queue *p, char buf[], uint16_t max_size)
 {
 	p->data = buf;
 	p->front = p->rear = max_size - 1;
@@ -10,7 +21,7 @@ int init_queue(queue *p, uint16_t buf[], uint16_t max_size)
 	return 0;
 }
 
-int in_queue(queue *p, uint16_t c)
+int in_char_queue(char_queue *p, char c)
 {
 	if(p->count == p->max_size)
 		return -1;
@@ -22,7 +33,7 @@ int in_queue(queue *p, uint16_t c)
 	return 0;
 }
 
-int out_queue(queue *p, uint16_t *c)
+int out_char_queue(char_queue *p, char *c)
 {
 	if(0 == p->count)
 		return -1;
