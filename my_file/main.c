@@ -79,7 +79,7 @@ int main(){
         uprintf(DEBUG_USARTx,str_temp);
         while(1);
     }
-	camera_reg_write(0x9C,param->threshold);
+	camera_reg_write(0x9C, 200);
     camera_start();   //摄像头开始采集数据
     //配置MPU6050
 //    erro_n = mpu6050_fast_init(gyro);
@@ -173,7 +173,7 @@ int main(){
             up_flag = 0;
             white_flag = 0;
             black_flag = 0;
-            lcd_set_cursor(ov7725_image->width,320 - i);
+            lcd_set_cursor(0,320 - i);
             lcd_ram_write_prepare();
             for(j = 0;j < ov7725_image->width;j++){
                 if((((ov7725_image->array)[(scanline + j)/8] << ((scanline + j)%8)) & 0x80) == 0x80){ //黑色的
@@ -183,14 +183,14 @@ int main(){
                         if(up_flag == 1){   //如果下降沿之前，有上升沿，则两个沿之间可能是白线
                             if((down_point - up_point > WHITE_LINE_WIDTH_MIN) && (down_point - up_point < WHITE_LINE_WIDTH_MAX)){
                                 //此刻确定是白线
-                                lcd_set_cursor(ov7725_image->width - up_point,320 - i);
+                                lcd_set_cursor(up_point,320 - i);
                                 lcd_ram_write_prepare();
                                 for(k = up_point;k < down_point;k++){
                                     sum_area++;
                                     lcd_ram_write(0xffff);   //渲染二值化图像
                                     sum_x += k;
                                 }
-                                lcd_set_cursor(ov7725_image->width - j,320 - i);
+                                lcd_set_cursor(j,320 - i);
                                 lcd_ram_write_prepare();
                             }else{
                                 lcd_ram_write(0x0);  //渲染二值化图像
