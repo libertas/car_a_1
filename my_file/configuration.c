@@ -439,7 +439,7 @@ void USART_Configuration(void)
 void NVIC_Configuration()
 {
     //UART5 ÖÐ¶Ï
-	  NVIC_PriorityGroupConfig(NVIC_PriorityGroup_1);
+	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_1);
     NVIC_InitStructure.NVIC_IRQChannel=UART5_IRQn;
     NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority =0;//1
     NVIC_InitStructure.NVIC_IRQChannelSubPriority =0;//0

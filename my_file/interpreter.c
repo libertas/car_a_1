@@ -5,6 +5,7 @@
 #include "camera.h"
 #include "interpreter.h"
 #include "math.h"
+#include "tftlcd.h"
 
 
 char wl_buf[CMD_BUF_LEN] = {0};
@@ -17,6 +18,9 @@ format:
 	NOTE: command 0x00 is not usable.
 command list:
 */
+
+uint8_t i_threshold = 0;
+
 int run_cmd(char_queue *cmd_queue)
 {
 	char cmd;
@@ -36,7 +40,10 @@ int run_cmd(char_queue *cmd_queue)
 		
 		case 0x10:
 			out_char_queue(cmd_queue, (char*)&buf);
-			camera_reg_write(0x9C, buf);
+			if(buf != i_threshold) {
+				i_threshold = buf;
+				camera_reg_write(0x9C, i_threshold);
+			}
 			break;
 	}
 	
@@ -82,6 +89,7 @@ int check_cmd_1(char_queue *cmd_queue)
 				
 				#ifdef DEBUG_INTPRT
 				printf("\n-3\n");
+				lcd_show_string(80,120,200,100,24, "-3");
 				#endif
 				
 				out_char_queue(cmd_queue, (char*) &check_sum);  //remove the wrong byte
@@ -92,6 +100,7 @@ int check_cmd_1(char_queue *cmd_queue)
 			
 			#ifdef DEBUG_INTPRT
 			printf("\n-2\n");
+			lcd_show_string(80,120,200,100,24, "-2");
 			#endif
 			
 			return -2;
@@ -100,6 +109,7 @@ int check_cmd_1(char_queue *cmd_queue)
 	
 		#ifdef DEBUG_INTPRT
 		printf("\n-1\n");
+		lcd_show_string(80,120,200,100,24, "-1");
 		#endif
 		
 		return -1;

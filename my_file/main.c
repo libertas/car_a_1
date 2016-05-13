@@ -18,6 +18,7 @@ float g_pre_centroid_x[10] = {0};  //保存十个周期的质心
 
 int main(){
     //数据定义区
+	char str_tmp[20];
     int i,j,scanline,timeout,erro_n,k;
     int sensor_color_status;
     int hummock_cnt = 0;    //山岗计数
@@ -55,7 +56,7 @@ int main(){
     uprintf(DEBUG_USARTx,"********************************************************\n");
     exti_config();  //外部中断设置
     NVIC_Configuration();
-    cmd_init();   //初始化命令程序
+    // cmd_init();   //初始化命令程序
     exti_color_disable(); 
     fsmc_config();
     tim3_config();
@@ -81,7 +82,7 @@ int main(){
         uprintf(DEBUG_USARTx,str_temp);
         while(1);
     }
-	camera_reg_write(0x9C, 250);
+	camera_reg_write(0x9C, 230);
     camera_start();   //摄像头开始采集数据
     //配置MPU6050
 //    erro_n = mpu6050_fast_init(gyro);
@@ -169,6 +170,8 @@ int main(){
         //}
 		
 		check_cmd();
+		sprintf(str_tmp, "threshold:%3d", i_threshold);
+		lcd_show_string(40,120,200,100,24, str_tmp);
 
         sum_area = 0;
         sum_x = 0;
