@@ -441,8 +441,8 @@ void NVIC_Configuration()
     //UART5 ÖÐ¶Ï
 	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_1);
     NVIC_InitStructure.NVIC_IRQChannel=UART5_IRQn;
-    NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority =0;//1
-    NVIC_InitStructure.NVIC_IRQChannelSubPriority =0;//0
+    NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority =1;//1
+    NVIC_InitStructure.NVIC_IRQChannelSubPriority =1;//0
     NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
     NVIC_Init(&NVIC_InitStructure); 
 		
