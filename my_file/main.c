@@ -167,6 +167,8 @@ int main(){
         //    centroid_x = 0;
         //    centroid_y = 0;
         //}
+		
+		check_cmd();
 
         sum_area = 0;
         sum_x = 0;

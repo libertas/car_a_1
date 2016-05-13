@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "camera.h"
 #include "interpreter.h"
 #include "math.h"
 
@@ -21,14 +22,7 @@ int run_cmd(char_queue *cmd_queue)
 	char cmd;
 	out_char_queue(cmd_queue, &cmd);
 
-	uint8_t i;
-
-	uint8_t buf = 0, buf1 = 0;
-	uint16_t dbuf = 0;
-	uint32_t qbuf = 0;
-	float flbuf, flbuf1;
-
-	float x, y, rad;
+	uint8_t buf = 0;
 
 
 	switch(cmd) {
@@ -38,6 +32,11 @@ int run_cmd(char_queue *cmd_queue)
 			printf("\nUnknown command:%x\n", cmd);
 			#endif
 
+			break;
+		
+		case 0x10:
+			out_char_queue(cmd_queue, (char*)&buf);
+			camera_reg_write(0x9C, buf);
 			break;
 	}
 	
