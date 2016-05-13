@@ -40,7 +40,7 @@ int run_cmd(char_queue *cmd_queue)
 		
 		case 0x10:
 			out_char_queue(cmd_queue, (char*)&buf);
-			if(buf != i_threshold) {
+			if(buf != i_threshold && buf != 0) {
 				i_threshold = buf;
 				camera_reg_write(0x9C, i_threshold);
 			}

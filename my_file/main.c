@@ -82,7 +82,7 @@ int main(){
         uprintf(DEBUG_USARTx,str_temp);
         while(1);
     }
-	camera_reg_write(0x9C, 230);
+	camera_reg_write(0x9C, 220);
     camera_start();   //摄像头开始采集数据
     //配置MPU6050
 //    erro_n = mpu6050_fast_init(gyro);
