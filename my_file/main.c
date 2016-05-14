@@ -4,20 +4,21 @@
 #include "main.h"
 #include "configuration.h"
 #include "camera.h"
-#include "image.h"
+//#include "image.h"
 #include "global.h"
 #include "tftlcd.h"
 #include "tracking.h"
 #include "parameter.h"
 #include "cmd.h"
 #include "mpu6050.h"
+#include "ccd.h"
 
 u8 g_exp_lock = 0;     //曝光度锁定
 float g_pre_centroid_x[10] = {0};  //保存十个周期的质心
 
 int main(){
     //数据定义区
-    int i,j,scanline,timeout,erro_n,k;
+    int i,j,scanline,timeout,erro_n,k,n;
     int sensor_color_status;
     int hummock_cnt = 0;    //山岗计数
     int sensor_color_antishake = 0;  //颜色传感器防抖
@@ -41,7 +42,17 @@ int main(){
     param_struct *param;
     GPIO_TypeDef *gpio_g;
     u32 *gpiog_idr;
+    ccd_d ccd;
+    u8 point_pre;
+    u8 ccd_lose_flag = 1;
+    float ccd_centroid_x;
+    int line_width_cnt = 0;
+    int step_integral;   //跳变积分
+    int downstep_integral;
+    int upstep_array[STEP_LENGTH];
+    int downstep_array[STEP_LENGTH];
 /*********这是数据定义区的分割线**********************/	
+
 
 /*************以下是各种初始化********************/
     rcc_configuration();
@@ -217,6 +228,66 @@ int main(){
             centroid_x = 0;
         }else{
             centroid_x = sum_x/sum_area;
+        }
+/*******************************下面CCD显示和处理部分*******************************/
+        for(i = 0;i < 120;i++){
+            lcd_set_cursor(0,320 - i - ov7725_image->height);  //
+            lcd_ram_write_prepare();
+            n = ccd.size - 29;
+            for(j = 0;j < n;j++){
+                if((ccd.data[j] >> 4) > (1 - (i + 1)/120.f)*255 && (ccd.data[j] >> 4) <= (1 - i/120.f)*255){
+                    lcd_ram_write(0x0);
+                }else{
+                    lcd_ram_write(0xffff);
+                }
+            }
+        }
+        //以下是跳变沿
+        for(i = 0;i < 15;i++){
+            lcd_set_cursor(0,320 - i - 120 - ov7725_image->height);  //在图像之下显示
+            lcd_ram_write_prepare();
+            step_integral = 0;
+            downstep_integral = 0;
+            point_pre = ccd.data[0];
+            up_flag = 0;
+            ccd_lose_flag = 1;
+            for(j = 0;j < STEP_LENGTH;j++){
+                upstep_array[j] = 0;
+                downstep_array[j] = 0;
+            }
+            n = ccd.size - 29;
+            for(j = 1;j < n;j++){
+                step_integral -= upstep_array[j%STEP_LENGTH];
+                downstep_integral -= downstep_array[j%STEP_LENGTH];
+                upstep_array[j%STEP_LENGTH] = ccd.data[j] - ccd.data[j - 1];
+                downstep_array[j%STEP_LENGTH] = ccd.data[j - 1] - ccd.data[j];
+                downstep_integral += downstep_array[j%STEP_LENGTH];
+                step_integral += upstep_array[j%STEP_LENGTH];
+                if(step_integral > param->servo_p_base){   //暂时用servo_p_base表示跳变积分值
+                    up_flag = 1;
+                    line_width_cnt = WHITE_LINE_WIDTH;
+                   // centroid_x = j;
+                }
+                if(up_flag == 1){
+                    //识别上升沿之后，如果在WHITE_LINE_WIDTH点之内没有下降沿，则不是白线
+                    if(line_width_cnt-- == 0){   
+                        up_flag = 0;
+                    }
+                }
+                if((downstep_integral > 350) && (up_flag == 1)){  //识别出下降沿，，如果之前有上升沿，则判定为白线
+                    up_flag = 0;
+                    ccd_lose_flag = 0;
+                    ccd_centroid_x = j - STEP_LENGTH;
+                }
+            }
+            n = ccd.size - 29;
+            for(j = 0;j < n;j++){
+                if(abs(j - ccd_centroid_x) < 5 && ccd_lose_flag == 0){
+                    lcd_ram_write(0xffff);
+                }else{
+                    lcd_ram_write(0x0);
+                }
+            }
         }
 
         /**********************下面给大车发送白线的质心****************/
