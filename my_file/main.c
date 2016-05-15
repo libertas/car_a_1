@@ -299,7 +299,7 @@ int main(){
 		uint32_t qbuf;
 		uint8_t bbuf;
 		
-		memcpy(&qbuf, &centroid_x, 4);
+		memcpy(&qbuf, &ccd_centroid_x, 4);
         for(i = 0;i < 4;i++){
 			bbuf = (uint8_t)(0xff & (qbuf >> i * 8));
 			check_byte += bbuf;
