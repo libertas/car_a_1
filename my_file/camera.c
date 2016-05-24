@@ -42,7 +42,7 @@ int camera_init(image **pp_image){
     RCC_APB2PeriphClockCmd(RCC_APB2Periph_TIM1, ENABLE);
     //以下是IIC配置
     gpio_init_stru.GPIO_Mode = GPIO_Mode_AF;
-    gpio_init_stru.GPIO_Speed = GPIO_Speed_50MHz;
+    gpio_init_stru.GPIO_Speed = GPIO_Speed_100MHz;
     gpio_init_stru.GPIO_OType = GPIO_OType_OD;
     gpio_init_stru.GPIO_PuPd = GPIO_PuPd_UP;
     gpio_init_stru.GPIO_Pin = GPIO_Pin_8 | GPIO_Pin_9;   //PB8:SCL  PB9:SDA
@@ -50,7 +50,7 @@ int camera_init(image **pp_image){
     GPIO_PinAFConfig(GPIOB,GPIO_PinSource8,GPIO_AF_I2C1);
     GPIO_PinAFConfig(GPIOB,GPIO_PinSource9,GPIO_AF_I2C1);
     I2C_DeInit(CAMERA_I2CX);
-    i2c_init_stru.I2C_ClockSpeed = 100;   //100Hz
+    i2c_init_stru.I2C_ClockSpeed = 1000;   //100Hz
     i2c_init_stru.I2C_Mode = I2C_Mode_I2C;
     i2c_init_stru.I2C_DutyCycle = I2C_DutyCycle_2;   //
     i2c_init_stru.I2C_Ack = I2C_Ack_Enable;   //  使能应答
