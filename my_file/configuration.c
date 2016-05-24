@@ -34,7 +34,7 @@ void system_clk_set(void)
     RCC_PLLCmd(DISABLE);  //配置PLL之前需要关闭PLL
     RCC_HCLKConfig(RCC_SYSCLK_Div1);   //HCLK分频
     RCC_PCLK2Config(RCC_HCLK_Div1);   //PCLK2分频
-    RCC_PCLK1Config(RCC_HCLK_Div1);    //PCLK1分频
+    RCC_PCLK1Config(RCC_HCLK_Div4);    //PCLK1分频
     RCC_PLLConfig(RCC_PLLSource_HSE, 8, 336, 2, 7);    //sysclk = 168MHZ  ,,计算公式参见数据手册
     RCC_PLLCmd(ENABLE); //使能PLL
  
