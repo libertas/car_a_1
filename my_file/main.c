@@ -177,45 +177,22 @@ int main(){
         }
 
         /**********************下面给大车发送白线的质心****************/
+                uint8_t check_byte = 0x00;
 				data_temp.f32_data = centroid_x;
-				can_send_array[0] = 0x00;
+                check_byte += 0x80;
+				can_send_array[0] = check_byte;
 				for(i = 0;i < 4;i++){
 						can_send_array[i + 1] = data_temp.u8_array[i];
+                        check_byte += data_temp.u8_array[i];
 				}
 				can_send_msg(COMM_B_ID,can_send_array,5);
 				data_temp.f32_data = centroid_y;
 				for(i = 0;i< 4;i++){
 						can_send_array[i] = data_temp.u8_array[i];
+                        check_byte += data_temp.u8_array[i];
 				}
-				can_send_array[4] = 0x80;
+				can_send_array[4] = check_byte;
 				can_send_msg(COMM_B_ID,can_send_array,5);
-//				lcd_show_string(30,40,200,100,16,"cansend");
-//        uint8_t check_byte = 0x00;
-//        while (USART_GetFlagStatus(CMD_USARTx, USART_FLAG_TXE) == RESET); 
-//        USART_SendData(SENMSG_USARTx, 0x80);
-//		check_byte += 0x80;
-//		
-//		uint32_t qbuf;
-//		uint8_t bbuf;
-//		
-//		memcpy(&qbuf, &centroid_x, 4);
-//        for(i = 0;i < 4;i++){
-//			bbuf = (uint8_t)(0xff & (qbuf >> i * 8));
-//			check_byte += bbuf;
-//            while (USART_GetFlagStatus(CMD_USARTx, USART_FLAG_TXE) == RESET);
-//            USART_SendData(SENMSG_USARTx, bbuf);
-//        }
-//		
-//		memcpy(&qbuf, &centroid_y, 4);
-//        for(i = 0;i < 4;i++){
-//			bbuf = (uint8_t)(0xff & (qbuf >> i * 8));
-//			check_byte += bbuf;
-//            while (USART_GetFlagStatus(CMD_USARTx, USART_FLAG_TXE) == RESET);
-//            USART_SendData(SENMSG_USARTx, bbuf);
-//        }
-//		
-//        while (USART_GetFlagStatus(CMD_USARTx, USART_FLAG_TXE) == RESET); 
-//        USART_SendData(SENMSG_USARTx,(u8)(check_byte));
         /**********************上面给大车发送白线的质心****************/
 
 
