@@ -134,17 +134,18 @@ void can_nvic_config(){
 
 /* 函数名：int can_send_msg()
  * 功能：can发送一组数据
- * 参数：u8* msg 数据数组
+ * 参数：u8  can_id 数据包的标识符
+ *       u8* msg 数据数组
  *       u8  len 数据数组长度，最大为8
  * 返回值：-1,表示发送失败
  *         1 ,表示发送成功
  */
-int can_send_msg(u8 *msg,u8 len){
+int can_send_msg(u8 can_id,u8 *msg,u8 len){
     CanTxMsg tx_msg;
     u8 mbox;
     u16 i = 0;
 
-    tx_msg.StdId = CAN_ID;
+    tx_msg.StdId = can_id;
     tx_msg.IDE = CAN_Id_Standard;   //使用标准标识符
     tx_msg.RTR = CAN_RTR_Data;   //消息类型为数据帧
     tx_msg.DLC = len;   //消息长度

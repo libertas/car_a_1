@@ -12,9 +12,16 @@
 #include "cmd.h"
 #include "mpu6050.h"
 #include "interpreter.h"
+#include "can.h"
+#include "communicate.h"
 
 u8 g_exp_lock = 0;     //曝光度锁定
 float g_pre_centroid_x[10] = {0};  //保存十个周期的质心
+
+typedef union{
+    u8 u8_array[4];
+    float f32_data;
+}data_convert;
 
 int main(){
     //数据定义区
@@ -43,6 +50,8 @@ int main(){
     param_struct *param;
     GPIO_TypeDef *gpio_g;
     u32 *gpiog_idr;
+    data_convert data_temp;
+    u8 can_send_array[8];
 /*********这是数据定义区的分割线**********************/	
 
 /*************以下是各种初始化********************/
@@ -50,6 +59,7 @@ int main(){
     gpio_config();
     USART_Configuration();
 	interpreter_config();
+    comm_init();
 /**********************下面打印开机欢迎信息********************/
     uprintf(DEBUG_USARTx,"\n\n\n********************************************************\n");
     uprintf(DEBUG_USARTx,"               Welcome to BUPT ROBOCON!\n");
@@ -227,32 +237,21 @@ int main(){
         }
 
         /**********************下面给大车发送白线的质心****************/
-        uint8_t check_byte = 0x00;
-        while (USART_GetFlagStatus(CMD_USARTx, USART_FLAG_TXE) == RESET); 
-        USART_SendData(SENMSG_USARTx, 0x80);
-		check_byte += 0x80;
-		
-		uint32_t qbuf;
-		uint8_t bbuf;
-		
-		memcpy(&qbuf, &centroid_x, 4);
-        for(i = 0;i < 4;i++){
-			bbuf = (uint8_t)(0xff & (qbuf >> i * 8));
-			check_byte += bbuf;
-            while (USART_GetFlagStatus(CMD_USARTx, USART_FLAG_TXE) == RESET);
-            USART_SendData(SENMSG_USARTx, bbuf);
+        uint8_t check_byte = 0x80;
+        data_temp.f32_data = centroid_x;
+        can_send_array[0] = check_byte;
+        for(i = 0; i < 4; i++){
+            can_send_array[i + 1] = data_temp.u8_array[i];
+            check_byte += data_temp.u8_array[i];
         }
-		
-		memcpy(&qbuf, &centroid_y, 4);
-        for(i = 0;i < 4;i++){
-			bbuf = (uint8_t)(0xff & (qbuf >> i * 8));
-			check_byte += bbuf;
-            while (USART_GetFlagStatus(CMD_USARTx, USART_FLAG_TXE) == RESET);
-            USART_SendData(SENMSG_USARTx, bbuf);
+        can_send_msg(COMM_B_ID, can_send_array, 5);
+        data_temp.f32_data = centroid_y;
+        for(i = 0; i < 4; i++){
+            can_send_array[i] = data_temp.u8_array[i];
+            check_byte += data_temp.u8_array[i];
         }
-		
-        while (USART_GetFlagStatus(CMD_USARTx, USART_FLAG_TXE) == RESET); 
-        USART_SendData(SENMSG_USARTx,(u8)(check_byte));
+        can_send_array[4] = check_byte;
+        can_send_msg(COMM_B_ID, can_send_array, 5);
         /**********************上面给大车发送白线的质心****************/
 
 
