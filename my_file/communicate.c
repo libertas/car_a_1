@@ -19,7 +19,7 @@ void comm_msg_rcv_callback(CanRxMsg *can_rx_msg)
 {
 		if(can_rx_msg->StdId == COMM_A_ID){
             char data;
-			for(int i = 0; i < 5; i++){
+			for(int i = 0; i < 3; i++){
                 data = can_rx_msg->Data[i];
                 in_char_queue(&wl_queue,data);
             }
